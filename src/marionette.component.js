@@ -79,10 +79,14 @@ Marionette.Component = Marionette.Object.extend({
       throw new Error('You must specify a viewClass for your component.');
     }
 
-    return new ViewClass({
+    return new ViewClass(this.viewData());
+  },
+
+  viewData: function() {
+    return {
       model: this.model,
       collection: this.collection
-    });
+    };
   },
 
   // Set up events from the `viewEvents` hash

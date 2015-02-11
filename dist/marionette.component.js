@@ -1,7 +1,7 @@
 /**
- * Marionette.Component - Create and manage reusable components in Marionette.js
+ * marionette.component - Create and manage reusable components in Marionette.js
  * @version v0.0.1
- * @copyright (c) 2014 Jeremy Fairbank
+ * @copyright (c) 2015 Jeremy Fairbank
  * @link https://github.com/jfairbank/marionette.component
  * @license ISC
  */
@@ -97,10 +97,14 @@ Marionette.Component = Marionette.Object.extend({
       throw new Error('You must specify a viewClass for your component.');
     }
 
-    return new ViewClass({
+    return new ViewClass(this.viewData());
+  },
+
+  viewData: function() {
+    return {
       model: this.model,
       collection: this.collection
-    });
+    };
   },
 
   // Set up events from the `viewEvents` hash
