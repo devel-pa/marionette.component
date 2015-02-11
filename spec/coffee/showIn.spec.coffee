@@ -3,7 +3,15 @@ describe 'Marionette.Component', ->
     @setFixtures '<div id="main"></div>'
 
   describe 'when showing', ->
+#
     beforeEach ->
+      TestModel = Backbone.Model.extend({});
+      @testOptions = {
+        model: new TestModel(),
+        collection: 77,
+        foo: 'bar'
+      }
+
       # Region and view
       @MyRegion = Marionette.Region.extend(el: '#main')
       @MyView   = Marionette.ItemView.extend(template: _.template('foo bar'))
@@ -30,8 +38,28 @@ describe 'Marionette.Component', ->
       # Component instance
       @component = new @MyComponent()
 
+    describe 'with data as an object', ->
+      beforeEach ->
+        @component.viewOptions = @testOptions
+        @component.showIn(@region)
+
+      it 'contains sent properties', ->
+        expect(@component.view.getOption('foo'))
+        .to.equal('bar')
+
+    describe 'with data as a function', ->
+      beforeEach ->
+        opts = @testOptions
+        @component.viewOptions = () -> opts
+        @component.showIn(@region)
+
+      it 'contains sent properties', ->
+        expect(@component.view.getOption('foo'))
+        .to.equal('bar')
+
     describe 'with the region', ->
-      beforeEach -> @component.showIn(@region)
+      beforeEach ->
+        @component.showIn(@region)
 
       it 'calls `_showView`', ->
         expect(@showViewSpy)
