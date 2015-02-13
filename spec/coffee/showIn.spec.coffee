@@ -3,6 +3,11 @@ describe 'Marionette.Component', ->
     @setFixtures '<div id="main"></div>'
 
   describe 'when showing', ->
+    options = {
+      model: Backbone.Model,
+      collection: 77
+    }
+
     beforeEach ->
       # Region and view
       @MyRegion = Marionette.Region.extend(el: '#main')
@@ -11,6 +16,8 @@ describe 'Marionette.Component', ->
 
       # Stubs and spies
       @showViewSpy          = @sinon.spy(Component.prototype, '_showView')
+      @getViewSpy          = @sinon.spy(Component.prototype, '_getView')
+      @optionsViewSpy       = @sinon.spy(_, 'result')
       @onBeforeShowStub     = @sinon.stub()
       @onShowStub           = @sinon.stub()
       @onBeforeShowViewStub = @sinon.stub()
@@ -37,6 +44,29 @@ describe 'Marionette.Component', ->
         expect(@showViewSpy)
           .to.have.been.calledOnce
           .and.have.been.calledOn(@component)
+
+      describe 'as an object', ->
+        beforeEach -> @component.viewOptions = options
+        it 'calls `_getView`', ->
+
+          expect(@getViewSpy)
+          .to.have.been.calledOnce
+          .and.have.been.calledOn(@component)
+        it 'calls `result`', ->
+          expect(@component._getView())
+          .to.have.property('model')
+          .and.to.equal(Backbone.Model)
+
+
+        beforeEach -> @component.viewOptions = () -> options
+        it 'calls `_getView`', ->
+          expect(@getViewSpy)
+          .to.have.been.calledOnce
+          .and.have.been.calledOn(@component)
+        it 'calls `result`', ->
+          expect(@component._getView())
+          .to.have.property('model')
+          .and.to.equal(Backbone.Model)
 
       it 'calls `triggerMethod`', ->
         expect(@triggerMethodStub)
