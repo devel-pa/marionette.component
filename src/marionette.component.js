@@ -5,7 +5,7 @@
 // can have an optional model and collection too.
 
 Marionette.Component = Marionette.Object.extend({
-  constructor: function(options) {
+  constructor(options) {
     options = options || {};
 
     this.model      = options.model;
@@ -15,7 +15,7 @@ Marionette.Component = Marionette.Object.extend({
   },
 
   // Show this component inside a region
-  showIn: function(region) {
+  showIn(region) {
     if (this._isShown) {
       throw new Error('This component is already shown in a region.');
     }
@@ -35,7 +35,7 @@ Marionette.Component = Marionette.Object.extend({
   },
 
   // Destroy the component and view
-  destroy: function() {
+  destroy() {
     if (this._isDestroyed) {
       return;
     }
@@ -52,7 +52,7 @@ Marionette.Component = Marionette.Object.extend({
   },
 
   // Show the view in the region
-  _showView: function() {
+  _showView() {
     var view = this.view = this._getView();
 
     this._initializeViewEvents();
@@ -72,7 +72,7 @@ Marionette.Component = Marionette.Object.extend({
   },
 
   // Get an instance of the view to display
-  _getView: function() {
+  _getView() {
     var ViewClass = this.viewClass;
 
     if (!ViewClass) {
@@ -82,7 +82,7 @@ Marionette.Component = Marionette.Object.extend({
     return new ViewClass(_.result(this, 'viewOptions'));
   },
 
-  viewOptions: function() {
+  viewOptions() {
     return {
       model: this.model,
       collection: this.collection
@@ -90,14 +90,14 @@ Marionette.Component = Marionette.Object.extend({
   },
 
   // Set up events from the `viewEvents` hash
-  _initializeViewEvents: function() {
+  _initializeViewEvents() {
     if (this.viewEvents) {
       this.bindEntityEvents(this.view, this.viewEvents);
     }
   },
 
   // Destroy a view by emptying the region
-  _destroyViewThroughRegion: function() {
+  _destroyViewThroughRegion() {
     var region = this.region;
 
     // Don't do anything if there isn't a region or view.
@@ -116,7 +116,7 @@ Marionette.Component = Marionette.Object.extend({
   },
 
   // Remove references to all attached objects
-  _removeReferences: function() {
+  _removeReferences() {
     delete this.model;
     delete this.collection;
     delete this.region;

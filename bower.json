@@ -23,7 +23,7 @@
     "spec"
   ],
   "dependencies": {
-    "backbone.marionette": "~2.1.0",
+    "backbone.marionette": "~2.4.1",
     "underscore": "1.4.4 - 1.6.0"
   }
 }

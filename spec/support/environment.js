@@ -13,14 +13,14 @@ if (!global.document || !global.window) {
   var jsdom = require('jsdom').jsdom;
   var docHtml = '<html><head><script></script></head><body></body></html>';
 
-  global.document = jsdom(docHtml, null, {
+  global.document = jsdom(docHtml, {
     FetchExternalResources: ['script'],
     ProcessExternalResources: ['script'],
     MutationEvents: '2.0',
     QuerySelector: false
   });
 
-  global.window = document.createWindow();
+  global.window = document.defaultView;
   global.navigator = global.window.navigator;
 
   global.window.Node.prototype.contains = function (node) {

@@ -1,13 +1,6 @@
 // Gulp modules
 var gulp   = require('gulp');
-var wrap   = require('gulp-wrap-umd');
-var uglify = require('gulp-uglify');
-var rename = require('gulp-rename');
-var header = require('gulp-header');
-var jshint = require('gulp-jshint');
-var clean  = require('gulp-clean');
-var coffee = require('gulp-coffee');
-var mocha  = require('gulp-mocha');
+var $ = require('gulp-load-plugins')();
 
 // Other modules
 var runSequence = require('run-sequence');
@@ -26,7 +19,8 @@ var distFiles   = distPath + '/*.js';
 // =============
 gulp.task('wrap', function() {
   return gulp.src(srcFile)
-    .pipe(wrap({
+    .pipe($.babel())
+    .pipe($.wrapUmd({
       namespace: 'Marionette.Component',
       exports: 'Marionette.Component',
       deps: [
@@ -41,8 +35,8 @@ gulp.task('wrap', function() {
 // ======
 gulp.task('uglify', function() {
   return gulp.src(distFile)
-    .pipe(uglify())
-    .pipe(rename(minFilename))
+    .pipe($.uglify())
+    .pipe($.rename(minFilename))
     .pipe(gulp.dest(distPath));
 });
 
@@ -62,7 +56,7 @@ gulp.task('header', function() {
   ].join('\n');
 
   return gulp.src(distFiles)
-    .pipe(header(banner, { pkg: pkg, year: (new Date()).getFullYear() }))
+    .pipe($.header(banner, { pkg: pkg, year: (new Date()).getFullYear() }))
     .pipe(gulp.dest(distPath));
 });
 
@@ -70,25 +64,26 @@ gulp.task('header', function() {
 // ====
 gulp.task('lint', function() {
   return gulp.src(srcFile)
-    .pipe(jshint());
+    .pipe($.jshint());
 });
 
 // Testing
 // =======
 gulp.task('cleanTests', function() {
   return gulp.src('spec/javascript', { read: false })
-    .pipe(clean());
+    .pipe($.clean());
 });
 
 gulp.task('buildTests', ['cleanTests'], function() {
   return gulp.src('spec/coffee/*.spec.coffee')
-    .pipe(coffee({ bare: true }))
+    .pipe($.coffee({ bare: true }))
     .pipe(gulp.dest('spec/javascript'));
 });
 
 gulp.task('buildTestLib', function() {
   return gulp.src(srcFile)
-    .pipe(wrap({
+    .pipe($.babel())
+    .pipe($.wrapUmd({
       namespace: 'Marionette.Component',
       exports: 'Marionette.Component'
     }))
@@ -101,7 +96,7 @@ gulp.task('runTests', ['buildTests', 'buildTestLib'], function() {
   require('./spec/support/environment');
 
   return gulp.src(files, { read: false })
-    .pipe(mocha({ reporter: 'nyan' }));
+    .pipe($.mocha({ reporter: 'nyan' }));
 });
 
 gulp.task('test', function(callback) {

@@ -22,85 +22,87 @@
 // business logic on itself instead of the view. A `Marionette.Component`
 // can have an optional model and collection too.
 
+"use strict";
+
 Marionette.Component = Marionette.Object.extend({
-  constructor: function(options) {
+  constructor: function constructor(options) {
     options = options || {};
 
-    this.model      = options.model;
+    this.model = options.model;
     this.collection = options.collection;
 
     Marionette.Object.prototype.constructor.apply(this, arguments);
   },
 
   // Show this component inside a region
-  showIn: function(region) {
+  showIn: function showIn(region) {
     if (this._isShown) {
-      throw new Error('This component is already shown in a region.');
+      throw new Error("This component is already shown in a region.");
     }
 
     if (!region) {
-      throw new Error('Please supply a region to show inside.');
+      throw new Error("Please supply a region to show inside.");
     }
 
     this.region = region;
 
-    this.triggerMethod('before:show');
+    this.triggerMethod("before:show");
 
     this._showView();
     this._isShown = true;
 
-    this.triggerMethod('show');
+    this.triggerMethod("show");
   },
 
   // Destroy the component and view
-  destroy: function() {
+  destroy: function destroy() {
     if (this._isDestroyed) {
       return;
     }
 
-    this.triggerMethod('before:destroy');
+    this.triggerMethod("before:destroy");
 
     this._destroyViewThroughRegion();
     this._removeReferences();
 
-    this.triggerMethod('destroy');
+    this.triggerMethod("destroy");
     this.stopListening();
 
     this._isDestroyed = true;
   },
 
   // Show the view in the region
-  _showView: function() {
+  _showView: function _showView() {
     var view = this.view = this._getView();
 
     this._initializeViewEvents();
 
     // Trigger show:view after the view is shown in the region
-    this.listenTo(view, 'show', _.partial(this.triggerMethod, 'show:view'));
+    this.listenTo(view, "show", _.partial(this.triggerMethod, "show:view"));
 
     // Trigger before:show before the region shows the view
-    this.triggerMethod('before:show:view');
+    this.triggerMethod("before:show:view");
 
     // Show the view in the region
     this.region.show(view);
 
     // Destroy the component if the region is emptied because it destroys
     // the view
-    this.listenToOnce(this.region, 'empty', this.destroy);
+    this.listenToOnce(this.region, "empty", this.destroy);
   },
 
   // Get an instance of the view to display
-  _getView: function() {
+  _getView: function _getView() {
     var ViewClass = this.viewClass;
 
     if (!ViewClass) {
-      throw new Error('You must specify a viewClass for your component.');
+      throw new Error("You must specify a viewClass for your component.");
     }
 
-    return new ViewClass(this.viewData());
+    return new ViewClass(_.result(this, "viewOptions"));
   },
 
-  viewData: function() {
+  viewOptions: function viewOptions() {
     return {
       model: this.model,
       collection: this.collection
@@ -108,14 +110,14 @@ Marionette.Component = Marionette.Object.extend({
   },
 
   // Set up events from the `viewEvents` hash
-  _initializeViewEvents: function() {
+  _initializeViewEvents: function _initializeViewEvents() {
     if (this.viewEvents) {
       this.bindEntityEvents(this.view, this.viewEvents);
     }
   },
 
   // Destroy a view by emptying the region
-  _destroyViewThroughRegion: function() {
+  _destroyViewThroughRegion: function _destroyViewThroughRegion() {
     var region = this.region;
 
     // Don't do anything if there isn't a region or view.
@@ -134,14 +136,13 @@ Marionette.Component = Marionette.Object.extend({
   },
 
   // Remove references to all attached objects
-  _removeReferences: function() {
+  _removeReferences: function _removeReferences() {
     delete this.model;
     delete this.collection;
     delete this.region;
     delete this.view;
   }
 });
-
 return Marionette.Component;
 
 }));
