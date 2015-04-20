@@ -39,7 +39,7 @@
     "gulp-mocha": "~2.0.0",
     "gulp-clean": "~0.3.1",
     "gulp-coffee": "~2.3.1",
-    "gulp-babel": "devel-pa/gulp-babel",
+    "gulp-babel": "~5.1.0",
     "jquery": "~2.1.3",
     "jsdom": "~3.1.2",
     "chai": "~2.1.2",
