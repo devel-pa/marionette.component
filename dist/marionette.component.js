@@ -22,7 +22,7 @@
 // business logic on itself instead of the view. A `Marionette.Component`
 // can have an optional model and collection too.
 
-"use strict";
+'use strict';
 
 Marionette.Component = Marionette.Object.extend({
   constructor: function constructor(options) {
@@ -37,21 +37,21 @@ Marionette.Component = Marionette.Object.extend({
   // Show this component inside a region
   showIn: function showIn(region) {
     if (this._isShown) {
-      throw new Error("This component is already shown in a region.");
+      throw new Error('This component is already shown in a region.');
     }
 
     if (!region) {
-      throw new Error("Please supply a region to show inside.");
+      throw new Error('Please supply a region to show inside.');
     }
 
     this.region = region;
 
-    this.triggerMethod("before:show");
+    this.triggerMethod('before:show');
 
     this._showView();
     this._isShown = true;
 
-    this.triggerMethod("show");
+    this.triggerMethod('show');
   },
 
   // Destroy the component and view
@@ -60,12 +60,12 @@ Marionette.Component = Marionette.Object.extend({
       return;
     }
 
-    this.triggerMethod("before:destroy");
+    this.triggerMethod('before:destroy');
 
     this._destroyViewThroughRegion();
     this._removeReferences();
 
-    this.triggerMethod("destroy");
+    this.triggerMethod('destroy');
     this.stopListening();
 
     this._isDestroyed = true;
@@ -78,17 +78,17 @@ Marionette.Component = Marionette.Object.extend({
     this._initializeViewEvents();
 
     // Trigger show:view after the view is shown in the region
-    this.listenTo(view, "show", _.partial(this.triggerMethod, "show:view"));
+    this.listenTo(view, 'show', _.partial(this.triggerMethod, 'show:view'));
 
     // Trigger before:show before the region shows the view
-    this.triggerMethod("before:show:view");
+    this.triggerMethod('before:show:view');
 
     // Show the view in the region
     this.region.show(view);
 
     // Destroy the component if the region is emptied because it destroys
     // the view
-    this.listenToOnce(this.region, "empty", this.destroy);
+    this.listenToOnce(this.region, 'empty', this.destroy);
   },
 
   // Get an instance of the view to display
@@ -96,10 +96,10 @@ Marionette.Component = Marionette.Object.extend({
     var ViewClass = this.viewClass;
 
     if (!ViewClass) {
-      throw new Error("You must specify a viewClass for your component.");
+      throw new Error('You must specify a viewClass for your component.');
     }
 
-    return new ViewClass(_.result(this, "viewOptions"));
+    return new ViewClass(_.result(this, 'viewOptions'));
   },
 
   viewOptions: function viewOptions() {
